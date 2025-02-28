@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
+from bson import ObjectId
 
 # load environment variables
 load_dotenv()
@@ -26,9 +27,7 @@ def home():
 def search():
     return render_template("search.html")
 
-
-
-@app.route("/bathroom/<bathroomID>.html")
+@app.route("/bathroom/<bathroomID>")
 def bathroom(bathroomID):
     bathroom = bathrooms_collection.find_one({"_id": ObjectId(bathroomID)})
     bathroomName=pins_collection.find_one({"_id":bathroom.get("location_id")}).get("name")
@@ -36,10 +35,12 @@ def bathroom(bathroomID):
     description=bathroom.get("type")+" "+bathroom.get("orientation")+" Bathroom"
     reviews = reviews_collection.find({"bathroom_id": ObjectId(bathroomID)})
     imageURL=str(bathroom.get("img_url"))
+    
     if (imageURL=="None" or imageURL==""):
         imageString="Image Not Found"
     else:
         imageString="<img src='"+imageURL+"'>"
+    
     i=0
     revSum=0
     for review in reviews:
@@ -47,6 +48,7 @@ def bathroom(bathroomID):
         revSum+=review["rating"]
     revSum=revSum/i
     overallRating=""
+    
     i=0
     while (i<revSum):
         i+=1
@@ -57,18 +59,21 @@ def bathroom(bathroomID):
     while (i<5):
         i+=1
         overallRating +="<i class='fa-regular fa-star'></i>"
+
     reviews = reviews_collection.find({"bathroom_id": ObjectId(bathroomID)})
     print(reviews)
+    
     return render_template("bathroom.html",rating=overallRating,bathroomDescription=description, bathroomLocation=fullLocation,toilets=str(bathroom.get("toilets")),bathroomImage=imageString,bathroomReviews=reviews,sinks=str(bathroom.get("sinks")))
 
-
-@app.route("/api/pins")
+@app.route('/api/pins')
 def get_pins():
-    # fetch all pins from MongoDB
-    pins = list(pins_collection.find({}, {"_id": 0, "name": 1, "lat": 1, "lng": 1}))
-    return jsonify(pins)
+    pins = list(db.pins.find({}, {"_id": 1, "name": 1, "lat": 1, "lng": 1}))  # Explicitly include _id
 
-from bson import ObjectId
+    # Convert MongoDB ObjectId to a string for JSON compatibility
+    for pin in pins:
+        pin['_id'] = str(pin['_id'])
+
+    return jsonify(pins)
 
 # helper function, converts ObjectId to string
 def convert_objectid(obj):
@@ -84,6 +89,8 @@ def convert_objectid(obj):
 @app.route("/api/search", methods=["GET"])
 def search_api():
     query = request.args.get("q", "").lower()
+    floor_filter = request.args.get("floor")
+    type_filter = request.args.get("type")
 
     # fetch building by name (case-insensitive)
     building = pins_collection.find_one({"name": {"$regex": query, "$options": "i"}})
@@ -91,9 +98,16 @@ def search_api():
     # return empty list of bathrooms if no building found
     if not building:
         return jsonify({"bathrooms": []})
+    
+    bathroom_query = {"location_id": building["_id"]}
 
-    # fetch bathrooms associated w/ found building
-    bathrooms = list(bathrooms_collection.find({"location_id": building["_id"]}))
+    if floor_filter:
+        bathroom_query["floor"] = int(floor_filter)  # Convert to integer
+    if type_filter:
+        bathroom_query["type"] = type_filter  # Match bathroom type
+
+    # Fetch bathrooms that match filters
+    bathrooms = list(bathrooms_collection.find(bathroom_query))
 
     # convert ObjectId fields to string
     building = convert_objectid(building)
@@ -101,6 +115,19 @@ def search_api():
 
     # return bathrooms list as the response
     return jsonify({"bathrooms": bathrooms})
+
+@app.route("/building/<building_id>")
+def view_building(building_id):
+    # Fetch building details
+    building = pins_collection.find_one({"_id": ObjectId(building_id)})
+
+    if not building:
+        return "Building not found", 404
+
+    # Fetch bathrooms associated with this building
+    bathrooms = list(bathrooms_collection.find({"location_id": ObjectId(building_id)}))
+
+    return render_template("building.html", building=building, bathrooms=bathrooms)
 
 if __name__ == "__main__":
     app.run(debug=True)
