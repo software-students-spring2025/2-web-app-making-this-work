@@ -48,7 +48,7 @@
                     data.bathrooms.forEach(bathroom => {
                         const listItem = document.createElement("li");
                         listItem.className = "p-3 bg-white rounded-lg shadow-md dark:bg-neutral-800";
-                        listItem.textContent = bathroom.label + " (Floor " + bathroom.floor + ")";
+                        listItem.textContent = "<a href=/bathroom/"+bathroom._id+".html>"+ bathroom.label + " (Floor " + bathroom.floor + ") " + "</a>";
                         resultsList.appendChild(listItem);
                     });
                 } catch (error) {
