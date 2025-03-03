@@ -21,7 +21,7 @@
 
     <!-- Filter Bar -->
     <div class="p-4 flex space-x-3">
-        <button id="filterButton" class="px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:ring focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-400">
+        <button id="filterButton" class="px-4 py-2 rounded-lg text-white bg-violet-600 hover:bg-violet-700 focus:ring focus:ring-violet-300 dark:bg-violet-500 dark:hover:bg-violet-600 dark:focus:ring-violet-400">
             Filter
         </button>
         <button id="clearButton" class="px-4 py-2 rounded-lg text-white bg-gray-600 hover:bg-gray-700 focus:ring focus:ring-gray-300 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400">
@@ -33,7 +33,6 @@
         <div class="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg w-80">
             <h2 class="text-lg font-semibold mb-4">Filter Options</h2>
     
-            <!-- Example Filter Options -->
             <div class="space-y-2">
                 <label class="block">
                     <span class="text-gray-700 dark:text-gray-300">Floor Number:</span>
@@ -48,6 +47,27 @@
                         <option value="Private">Private</option>
                     </select>
                 </label>
+
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Orientation:</span>
+                    <select id="orientationFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                        <option value="">Any</option>
+                        <option value="Men's">Men's</option>
+                        <option value="Women's">Women's</option>
+                        <option value="All">All</option>
+                    </select>
+                </label>
+                
+                <!-- New Filters for Sinks and Toilets -->
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Number of Sinks:</span>
+                    <input type="number" id="sinksFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                </label>
+                
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Number of Toilets:</span>
+                    <input type="number" id="toiletsFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                </label>
             </div>
     
             <!-- Buttons -->
@@ -55,7 +75,7 @@
                 <button id="closeFilter" class="px-4 py-2 rounded bg-gray-400 dark:bg-gray-600 hover:bg-gray-500 dark:hover:bg-gray-700 text-white">
                     Close
                 </button>
-                <button id="applyFilter" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white">
+                <button id="applyFilter" class="px-4 py-2 rounded-lg text-white bg-violet-600 hover:bg-violet-700 focus:ring focus:ring-violet-300 dark:bg-violet-500 dark:hover:bg-violet-600 dark:focus:ring-violet-400">
                     Apply
                 </button>
             </div>
@@ -76,77 +96,66 @@
             const clearButton = document.getElementById("clearButton");
 
             const filters = {
-                "floor" : null,
-                "type" : null
-            }
+                "floor": null,
+                "type": null,
+                "orientation": null,
+                "sinks": null,
+                "toilets": null
+            };
 
-
-            filterButton.addEventListener("click", ()=>{
+            filterButton.addEventListener("click", () => {
                 filterPopup.classList.remove("hidden");
-            })
+            });
 
-
-            document.getElementById("closeFilter").addEventListener("click", ()=>{
+            document.getElementById("closeFilter").addEventListener("click", () => {
                 filterPopup.classList.add("hidden");
-            })
+            });
 
-            document.getElementById("applyFilter").addEventListener("click", ()=>{
+            document.getElementById("applyFilter").addEventListener("click", () => {
                 filters["floor"] = document.getElementById("floorFilter").value || null;
                 filters["type"] = document.getElementById("typeFilter").value || null;
-                console.log(filters);
+                filters["orientation"] = document.getElementById("orientationFilter").value || null;
+                filters["sinks"] = document.getElementById("sinksFilter").value || null;
+                filters["toilets"] = document.getElementById("toiletsFilter").value || null;
                 filterPopup.classList.add("hidden");
                 search(searchInput.value);
-            })
+            });
 
-            clearButton.addEventListener("click", ()=>{
-                filters["floor"] = null;
-                filters["type"] = null;
-                document.getElementById("floorFilter").value = "";
-                document.getElementById("typeFilter").value = "";
+            clearButton.addEventListener("click", () => {
+                Object.keys(filters).forEach(key => filters[key] = null);
+                document.querySelectorAll("#filterPopup input, #filterPopup select").forEach(el => el.value = "");
                 search(searchInput.value);
-            })
+            });
 
-            // filter and display search results function
             async function search(query) {
-                resultsList.innerHTML = ""; // clear previous results
-                if (!query.trim()) return;  // don't search empty input
+                resultsList.innerHTML = "";
+                if (!query.trim()) return;
 
                 try {
-                    
                     let url = `/api/search?q=${query}`;
-                    if (filters["floor"]) {
-                        url += `&floor=${filters["floor"]}`;
-                    }
-                    if (filters["type"]) {
-                        url += `&type=${filters["type"]}`;
-                    }
+                    Object.keys(filters).forEach(key => {
+                        if (filters[key]) url += `&${key}=${filters[key]}`;
+                    });
+
                     const response = await fetch(url);
                     const data = await response.json();
-
-                    // check if bathrooms are found
+                    
                     if (data.bathrooms.length === 0) {
-                        resultsList.innerHTML = `<li class="text-gray-500 dark:text-neutral-400">No bathrooms found for this building</li>`;
+                        resultsList.innerHTML = `<li class="text-gray-500 dark:text-neutral-400">No bathrooms found</li>`;
                         return;
                     }
-
-                    // render bathrooms
+                    
                     data.bathrooms.forEach(bathroom => {
                         const listItem = document.createElement("li");
                         listItem.className = "p-3 bg-white rounded-lg shadow-md dark:bg-neutral-800";
-                        listItem.textContent = bathroom.label + " (Floor " + bathroom.floor + ")";
+                        listItem.textContent = `${bathroom.label} (Floor ${bathroom.floor}, ${bathroom.sinks} sinks, ${bathroom.toilets} toilets)`;
                         resultsList.appendChild(listItem);
                     });
                 } catch (error) {
                     console.error("Error fetching search results:", error);
                 }
             }
-
-            // event listener for search input
-            searchInput.addEventListener("input", () => {
-                search(searchInput.value);
-            });
         });
     </script>
-
 </body>
 </html>
