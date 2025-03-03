@@ -15,7 +15,7 @@ app.secret_key = os.getenv("SECRET_KEY")  # Needed for session management
 # MongoDB connection
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
-db = client.get_database("NYU")
+db = client.get_database("Cluster0")
 
 # Collections
 pins_collection = db.pins
