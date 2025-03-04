@@ -175,7 +175,7 @@ def bathroom(bathroomID):
         i+=1
         overallRating +="<i class='fa-regular fa-star'></i>"
 
-    reviews = reviews_collection.find({"bathroom_id": ObjectId(bathroomID)})
+    reviews = list(reviews_collection.find({"bathroom_id": ObjectId(bathroomID)}))
     print(reviews)
     
     return render_template("bathroom.html", bathroomID=bathroomID,bathroom=bathroom, rating=overallRating, bathroomLocation=fullLocation, bathroomImage=imageString, bathroomReviews=reviews)
@@ -191,7 +191,7 @@ def write_review(bathroom_id):
 
 
         # Insert the review into the MongoDB collection
-        reviews_collection.insert_one({"bathroom_id": bathroom_id, "comment": review_text, "rating": int(rating), "date":datetime.now()})
+        reviews_collection.insert_one({"bathroom_id": ObjectId(bathroom_id), "comment": review_text, "rating": int(rating), "date":datetime.now()})
         return redirect("/bathroom/"+bathroom_id)
 
     return render_template("write_review.html",bathroomID=bathroom_id)
