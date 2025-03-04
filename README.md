@@ -10,8 +10,8 @@ To help university students filter, search for, and find campus bathrooms.
 
 [User Stories Project Link](https://github.com/orgs/software-students-spring2025/projects/13/views/1)
 1. As an user, I want to be able to delete my account. 
-2. As an admin, I want to be able to delete reviews.
-3. As an admin, I want to be able to close a bathroom in the database.
+2. As an admin, I'd like a dashboard to view overall information.
+3. As an admin, I want to be able to edit the bathroom's information.
 4. As an user/admin, I want to be able to control wether or not I have admin privelages.
 5. As a user, I want to be able to sign in to a personal account.
 6. As a user I want to be able to open restroom location of choice in Google Maps so that I can navigate there quickly.
