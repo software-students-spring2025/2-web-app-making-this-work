@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-white">
+    {% include 'navbar.html' %}
+    
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            <!-- Buildings Count -->
+            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+                <h2 class="text-xl font-semibold">Total Buildings</h2>
+                <p class="text-3xl font-bold">{{ total_buildings }}</p>
+            </div>
+
+            <!-- Bathrooms Count -->
+            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+                <h2 class="text-xl font-semibold">Total Bathrooms</h2>
+                <p class="text-3xl font-bold">{{ total_bathrooms }}</p>
+            </div>
+
+            <!-- Normal Users Count -->
+            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+                <h2 class="text-xl font-semibold">Normal Users</h2>
+                <p class="text-3xl font-bold">{{ normal_users }}</p>
+            </div>
+
+            <!-- Admin Users Count -->
+            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+                <h2 class="text-xl font-semibold">Admin Users</h2>
+                <p class="text-3xl font-bold">{{ admin_users }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

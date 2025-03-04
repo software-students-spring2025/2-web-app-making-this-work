@@ -6,7 +6,8 @@
     <title>Search Bathrooms</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-900">
+
     {% include 'navbar.html' %}
 
     <!-- Search Bar -->
@@ -14,34 +15,35 @@
         <input 
             type="text" 
             id="searchInput" 
-            class="w-full p-3 rounded-lg border border-gray-300 focus:ring focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+            class="w-full p-3 rounded-lg border border-gray-300 focus:ring focus:ring-violet-300 bg-white text-gray-900"
             placeholder="Search for a building..."
         >
     </div>
 
     <!-- Filter Bar -->
     <div class="p-4 flex space-x-3">
-        <button id="filterButton" class="px-4 py-2 rounded-lg text-white bg-violet-600 hover:bg-violet-700 focus:ring focus:ring-violet-300 dark:bg-violet-500 dark:hover:bg-violet-600 dark:focus:ring-violet-400">
+        <button id="filterButton" class="px-4 py-2 rounded-lg text-white bg-violet-600 hover:bg-violet-700 focus:ring focus:ring-violet-300">
             Filter
         </button>
-        <button id="clearButton" class="px-4 py-2 rounded-lg text-white bg-gray-600 hover:bg-gray-700 focus:ring focus:ring-gray-300 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400">
+        <button id="clearButton" class="px-4 py-2 rounded-lg text-white bg-gray-600 hover:bg-gray-700 focus:ring focus:ring-gray-300">
             Clear
         </button>
     </div>
 
+    <!-- Filter Popup -->
     <div id="filterPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
-        <div class="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg w-80">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-80">
             <h2 class="text-lg font-semibold mb-4">Filter Options</h2>
-    
+
             <div class="space-y-2">
                 <label class="block">
-                    <span class="text-gray-700 dark:text-gray-300">Floor Number:</span>
-                    <input type="number" id="floorFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                    <span class="text-gray-700">Floor Number:</span>
+                    <input type="number" id="floorFilter" class="w-full p-2 border rounded bg-gray-100 text-gray-900">
                 </label>
-    
+
                 <label class="block">
-                    <span class="text-gray-700 dark:text-gray-300">Type:</span>
-                    <select id="typeFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                    <span class="text-gray-700">Type:</span>
+                    <select id="typeFilter" class="w-full p-2 border rounded bg-gray-100 text-gray-900">
                         <option value="">Any</option>
                         <option value="Communal">Communal</option>
                         <option value="Private">Private</option>
@@ -49,8 +51,8 @@
                 </label>
 
                 <label class="block">
-                    <span class="text-gray-700 dark:text-gray-300">Orientation:</span>
-                    <select id="orientationFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                    <span class="text-gray-700">Orientation:</span>
+                    <select id="orientationFilter" class="w-full p-2 border rounded bg-gray-100 text-gray-900">
                         <option value="">Any</option>
                         <option value="Men's">Men's</option>
                         <option value="Women's">Women's</option>
@@ -58,24 +60,23 @@
                     </select>
                 </label>
                 
-                <!-- New Filters for Sinks and Toilets -->
                 <label class="block">
-                    <span class="text-gray-700 dark:text-gray-300">Number of Sinks:</span>
-                    <input type="number" id="sinksFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                    <span class="text-gray-700">Number of Sinks:</span>
+                    <input type="number" id="sinksFilter" class="w-full p-2 border rounded bg-gray-100 text-gray-900">
                 </label>
                 
                 <label class="block">
-                    <span class="text-gray-700 dark:text-gray-300">Number of Toilets:</span>
-                    <input type="number" id="toiletsFilter" class="w-full p-2 border rounded dark:bg-neutral-700 dark:text-white">
+                    <span class="text-gray-700">Number of Toilets:</span>
+                    <input type="number" id="toiletsFilter" class="w-full p-2 border rounded bg-gray-100 text-gray-900">
                 </label>
             </div>
-    
+
             <!-- Buttons -->
             <div class="mt-4 flex justify-end space-x-3">
-                <button id="closeFilter" class="px-4 py-2 rounded bg-gray-400 dark:bg-gray-600 hover:bg-gray-500 dark:hover:bg-gray-700 text-white">
+                <button id="closeFilter" class="px-4 py-2 rounded bg-gray-400 hover:bg-gray-500 text-white">
                     Close
                 </button>
-                <button id="applyFilter" class="px-4 py-2 rounded-lg text-white bg-violet-600 hover:bg-violet-700 focus:ring focus:ring-violet-300 dark:bg-violet-500 dark:hover:bg-violet-600 dark:focus:ring-violet-400">
+                <button id="applyFilter" class="px-4 py-2 rounded-lg text-white bg-violet-600 hover:bg-violet-700 focus:ring focus:ring-violet-300">
                     Apply
                 </button>
             </div>
@@ -141,16 +142,31 @@
                     const data = await response.json();
                     
                     if (data.bathrooms.length === 0) {
-                        resultsList.innerHTML = `<li class="text-gray-500 dark:text-neutral-400">No bathrooms found</li>`;
+                        resultsList.innerHTML = `<li class="text-gray-500">No bathrooms found</li>`;
                         return;
                     }
                     
                     data.bathrooms.forEach(bathroom => {
                         const listItem = document.createElement("li");
-                        listItem.className = "p-3 bg-white rounded-lg shadow-md dark:bg-neutral-800";
-                        listItem.textContent = `${bathroom.label} (Floor ${bathroom.floor}, ${bathroom.sinks} sinks, ${bathroom.toilets} toilets)`;
+                        listItem.className = "p-3 bg-white rounded-lg shadow-md border border-gray-300";
+
+                        // Create a link element
+                        const link = document.createElement("a");
+                        link.href = `/bathroom/${bathroom._id}`;
+                        link.className = "block";
+                        link.innerHTML = `
+                            <h2 class="text-xl font-semibold">${bathroom.label}</h2>
+                            <p>Floor: ${bathroom.floor}</p>
+                            <p>Type: ${bathroom.type}</p>
+                            <p>Orientation: ${bathroom.orientation}</p>
+                            <p>Sinks: ${bathroom.sinks} | Toilets: ${bathroom.toilets}</p>
+                            ${bathroom.img_url ? `<img src="${bathroom.img_url}" alt="Bathroom Image" class="mt-2 w-64 rounded-lg border border-gray-300">` : ''}
+                        `;
+
+                        listItem.appendChild(link);
                         resultsList.appendChild(listItem);
                     });
+
                 } catch (error) {
                     console.error("Error fetching search results:", error);
                 }

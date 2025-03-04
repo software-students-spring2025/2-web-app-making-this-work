@@ -140,6 +140,26 @@ def search():
 def profile():
     return render_template("profile.html", user=current_user)
 
+# Dashboard for Admins Route
+@app.route("/dashboard")
+@login_required
+def admin_dashboard():
+    if not current_user.is_admin:
+        return "Access Denied", 403  # Restrict access to admins only
+
+    # Fetch statistics from the database
+    total_buildings = pins_collection.count_documents({})
+    total_bathrooms = bathrooms_collection.count_documents({})
+    normal_users = users_collection.count_documents({"is_admin": False})
+    admin_users = users_collection.count_documents({"is_admin": True})
+
+    return render_template("dashboard.html", 
+        total_buildings=total_buildings, 
+        total_bathrooms=total_bathrooms,
+        normal_users=normal_users,
+        admin_users=admin_users
+    )
+
 # Individual Bathroom Page Route
 @app.route("/bathroom/<bathroomID>")
 @login_required

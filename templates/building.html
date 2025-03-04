@@ -6,7 +6,7 @@
     <title>{{ building.name }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-900">
     {% include 'navbar.html' %}
 
     <div class="container mx-auto p-6">
@@ -15,21 +15,22 @@
         <!-- Bathrooms List -->
         <ul class="mt-4 space-y-3">
             {% for bathroom in bathrooms %}
-            <li class="p-4 bg-white rounded-lg shadow-md dark:bg-neutral-800">
-                <!-- wrap entry in a link to the bathroom's page -->
-                <a href="{{ url_for('bathroom', bathroomID=bathroom['_id']|string) }}">
+            <li class="p-4 bg-white rounded-lg shadow-md border border-gray-300">
+                <!-- Wrap entry in a link to the bathroom's page -->
+                <a href="{{ url_for('bathroom', bathroomID=bathroom['_id']|string) }}" class="block">
                     <h2 class="text-xl font-semibold">{{ bathroom.label }}</h2>
                     <p>Floor: {{ bathroom.floor }}</p>
                     <p>Type: {{ bathroom.type }}</p>
                     <p>Orientation: {{ bathroom.orientation }}</p>
                     <p>Sinks: {{ bathroom.sinks }} | Toilets: {{ bathroom.toilets }}</p>
                     {% if bathroom.img_url %}
-                        <img src="{{ bathroom.img_url }}" alt="Bathroom Image" class="mt-2 w-64 rounded-lg">
+                        <img src="{{ bathroom.img_url }}" alt="Bathroom Image" class="mt-2 w-64 rounded-lg border border-gray-300">
                     {% endif %}
                 </a>
             </li>
             {% endfor %}
         </ul>
     </div>
+
 </body>
 </html>
