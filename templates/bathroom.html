@@ -22,6 +22,7 @@
 </head>
 <body class="bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-white">
     {% include 'navbar.html' %}
+    <div class="container mx-auto p-6">
     <div class="text-xl font-semibold">{{bathroomLocation}}</div>
     {{rating|safe}}
     <div class="image">{{bathroomImage}}</div>
@@ -44,10 +45,10 @@
                         <i class="fa-regular fa-star"></i>
                     {% endif %}
                 {% endfor %}
-            </div>
+           
             {{(review.date|string).split(" ")[0]}} {{(review.date|string).split(" ")[1].split(".")[0]}}<br>     {{review.comment}}
-        {%endfor%}
-    </div>
+         </div>{%endfor%}
+    </div></div>
     <!--TODO: INCLUDE REVIEWS-->
     
 </body>
