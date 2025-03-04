@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from dotenv import load_dotenv
 from bson import ObjectId
+from datetime import datetime
 
 # load environment variables
 load_dotenv()
@@ -177,7 +178,24 @@ def bathroom(bathroomID):
     reviews = reviews_collection.find({"bathroom_id": ObjectId(bathroomID)})
     print(reviews)
     
-    return render_template("bathroom.html", bathroom=bathroom, rating=overallRating, bathroomLocation=fullLocation, bathroomImage=imageString, bathroomReviews=reviews)
+    return render_template("bathroom.html", bathroomID=bathroomID,bathroom=bathroom, rating=overallRating, bathroomLocation=fullLocation, bathroomImage=imageString, bathroomReviews=reviews)
+
+# Bathroom review page 
+@app.route('/write_review/<bathroom_id>', methods=['GET', 'POST'])
+@login_required
+def write_review(bathroom_id):
+    if request.method == 'POST':
+        # Get form data
+        review_text = request.form.get('review_text')
+        rating = request.form.get('rating')
+
+
+        # Insert the review into the MongoDB collection
+        reviews_collection.insert_one({"bathroom_id": bathroom_id, "comment": review_text, "rating": int(rating), "date":datetime.now()})
+        return redirect("/bathroom/"+bathroom_id)
+
+    return render_template("write_review.html",bathroomID=bathroom_id)
+
 
 # Get Pins Route
 @app.route('/api/pins')
