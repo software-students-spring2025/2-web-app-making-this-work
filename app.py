@@ -153,12 +153,14 @@ def admin_dashboard():
     total_bathrooms = bathrooms_collection.count_documents({})
     normal_users = users_collection.count_documents({"is_admin": False})
     admin_users = users_collection.count_documents({"is_admin": True})
+    total_reviews = reviews_collection.count_documents({})  # Count all reviews
 
     return render_template("dashboard.html", 
         total_buildings=total_buildings, 
         total_bathrooms=total_bathrooms,
         normal_users=normal_users,
-        admin_users=admin_users
+        admin_users=admin_users,
+        total_reviews=total_reviews
     )
 
 # Individual Bathroom Page Route
