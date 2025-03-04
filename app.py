@@ -10,7 +10,7 @@ from bson import ObjectId
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")  # Needed for session management
+app.secret_key = os.urandom(16)  # Generate random key for session management
 
 # MongoDB connection
 MONGO_URI = os.getenv("MONGO_URI")
