@@ -1,1 +1,48 @@
 <!-- this page will be accessible when you go to view a bathrooms fullpage. so from /bathroom/bathroomID.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bathroom Overview</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Tailwind CSS CDN for css -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; }
+        .reviews{
+            background-color:#999999;
+            border-radius:20px;
+            text-align: center;
+            padding-top: 10px;
+            border: 1px solid #222;
+            padding-bottom: 10px;
+        }
+</style>
+</head>
+<body class="bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-white">
+    {% include 'navbar.html' %}
+    <div class="container mx-auto p-6">
+    <div class="text-xl font-semibold">{{bathroomLocation}}</div>
+
+    <!-- Review Form -->
+    <div class="mt-4 p-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
+        <h2 class="text-lg font-semibold mb-2">Write a Review</h2>
+        <form method="POST" action="">
+            <textarea name="review_text" class="w-full p-2 border rounded-lg mb-2" placeholder="Write your review here..." required></textarea>
+            <select name="rating" class="w-full p-2 border rounded-lg mb-2" required>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-lg">Submit Review</button>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>
