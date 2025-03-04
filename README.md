@@ -18,7 +18,7 @@ To help university students filter, search for, and find campus bathrooms.
 7. As a user, I want others to be able to leave reviews on bathrooms so that I can see public sentiment.
 8. As a user, I want to be able to view the details of a certain bathroom so that I can compare them.
 9. As a user, I want to be able to share bathrooms so that I can let a friend know about one if I so desire.
-10 As a user, I want to filter bathrooms.
+10. As a user, I want to filter bathrooms.
 
 
 ## Steps necessary to run the software
