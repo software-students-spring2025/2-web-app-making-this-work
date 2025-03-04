@@ -90,7 +90,7 @@ def signup():
 @app.route("/logout", methods=["POST"])
 @login_required
 def logout():
-    print("Logging out user:", current_user.email)
+    # print("Logging out user:", current_user.email)
     
     logout_user()  # <- does not actually work when remember=true with login_user().
     session.pop('_flashes', None)
@@ -170,11 +170,15 @@ def bathroom(bathroomID):
     fullLocation = bathroomName+", Floor "+str(bathroom.get("floor"))
     reviews = reviews_collection.find({"bathroom_id": ObjectId(bathroomID)})
     imageURL=str(bathroom.get("img_url"))
+    bathroom_name = bathroom.get("label", "Unknown Bathroom")
+    imageURL = bathroom.get("img_url", None)
+
+    # Get the location details using location_id from bathroom
+    location = pins_collection.find_one({"_id": bathroom.get("location_id")})
     
-    if (imageURL=="None" or imageURL==""):
-        imageString="Image Not Found"
-    else:
-        imageString="<img alt='Bathroom Image' src='"+imageURL+"'>"
+    # Extract latitude and longitude from the location document
+    latitude = location.get("lat")
+    longitude = location.get("lng")
     
     i=0
     revSum=0
@@ -196,9 +200,20 @@ def bathroom(bathroomID):
         overallRating +="<i class='fa-regular fa-star'></i>"
 
     reviews = list(reviews_collection.find({"bathroom_id": ObjectId(bathroomID)}))
-    print(reviews)
+    # print(reviews)
     
-    return render_template("bathroom.html", bathroomID=bathroomID,bathroom=bathroom, rating=overallRating, bathroomLocation=fullLocation, bathroomImage=imageString, bathroomReviews=reviews)
+    return render_template(
+        "bathroom.html", 
+        bathroomID=bathroomID,
+        bathroom=bathroom, 
+        rating=overallRating, 
+        bathroomLocation=fullLocation, 
+        bathroomImage=imageURL, 
+        bathroomReviews=reviews, 
+        user=current_user, 
+        bathroomName=bathroom_name,
+        latitude=latitude,
+        longitude=longitude)
 
 # Bathroom review page 
 @app.route('/write_review/<bathroom_id>', methods=['GET', 'POST'])
@@ -216,6 +231,27 @@ def write_review(bathroom_id):
 
     return render_template("write_review.html",bathroomID=bathroom_id)
 
+# Admin edit bathrooms route
+@app.route('/bathroom/<bathroomID>/update', methods=['POST'])
+@login_required
+def update_bathroom(bathroomID):
+    # print("Session Admin Status:", session.get("is_admin"))
+    if not current_user.is_admin:  # Check if user is admin
+        return jsonify({"error": "Unauthorized"}), 403
+
+    data = request.json
+    updated_fields = {
+        "label": data.get("label"),
+        "floor": int(data.get("floor", 0)),
+        "orientation": data.get("orientation"),
+        "type": data.get("type"),
+        "sinks": int(data.get("sinks", 0)),
+        "toilets": int(data.get("toilets", 0)),
+        "img_url": data.get("img_url")
+    }
+
+    db.bathrooms.update_one({"_id": ObjectId(bathroomID)}, {"$set": updated_fields})
+    return jsonify({"message": "Bathroom updated successfully!"})
 
 # Get Pins Route
 @app.route('/api/pins')

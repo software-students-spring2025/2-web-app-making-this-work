@@ -6,50 +6,207 @@
     <title>Bathroom Overview</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- Tailwind CSS CDN for css -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body, html { margin: 0; padding: 0; height: 100%; }
-        .reviews{
-            background-color:#999999;
-            border-radius:20px;
+        .reviews {
+            background-color: #999999;
+            border-radius: 20px;
             text-align: center;
             padding-top: 10px;
             border: 1px solid #222;
             padding-bottom: 10px;
         }
-</style>
+    </style>
 </head>
 <body class="bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-white">
     {% include 'navbar.html' %}
-    <div class="container mx-auto p-6">
-    <div class="text-xl font-semibold">{{bathroomLocation}}</div>
-    {{rating|safe}}
-    <div class="image">{{bathroomImage}}</div>
-    <!--TODO: INCLUDE LOCATION--><br>
-    <div class="description">{{bathroom.type}} {{bathroom.orientation}} Bathroom
-    <br>
-    Toilets: {{bathroom.toilets}}
-    <br>
-    Sinks: {{bathroom.sinks}}</div>
-    <br>
-    <div class="mt-4 space-y-3">
-        <a href=/write_review/{{bathroomID}}>Write a Review</a>
-        {%for review in bathroomReviews%}
-            <div id="stars{{review.rating}}" class="p-4 bg-white rounded-lg shadow-md dark:bg-neutral-800">
 
-                {% for i in range(1, 6) %}
-                    {% if i <= review.rating %}
-                        <i class="fa-solid fa-star"></i>
-                    {% else %}
-                        <i class="fa-regular fa-star"></i>
-                    {% endif %}
-                {% endfor %}
-           
-            {{(review.date|string).split(" ")[0]}} {{(review.date|string).split(" ")[1].split(".")[0]}}<br>     {{review.comment}}
-         </div>{%endfor%}
-    </div></div>
-    <!--TODO: INCLUDE REVIEWS-->
+    <div class="container mx-auto p-6">
+        <div class="text-xl font-semibold">{{ bathroomLocation }}</div>
+        <div class="text-xl font-semibold">{{ bathroomName }}</div>
+        {{ rating|safe }}
+        <div class="image">
+            {% if bathroomImage %}
+                <img src="{{ bathroomImage }}" alt="Bathroom Image" style="max-width: 100%; height: auto;">
+            {% else %}
+                <p>Image Not Found</p>
+            {% endif %}
+        </div>
+
+        <br>
+        <div class="description">
+            {{ bathroom.type }} {{ bathroom.orientation }} Bathroom
+            <br>Toilets: {{ bathroom.toilets }}
+            <br>Sinks: {{ bathroom.sinks }}
+        </div>
+
+        <!-- Admin Edit Button -->
+        {% if user.is_admin %}
+        <button id="editButton" class="mt-4 px-4 py-2 text-white font-semibold rounded-lg"
+            style="background-color: #f97316 !important; border: none !important;"
+            onmouseover="this.style.backgroundColor='#ea580c'"
+            onmouseout="this.style.backgroundColor='#f97316'">
+            Edit Bathroom
+        </button>
+        {% endif %}
+
+        <div class="mt-4">
+            {% if latitude and longitude %}
+                <button id="viewOnMap" class="px-4 py-2 text-white font-semibold rounded-lg bg-blue-500 hover:bg-blue-600">
+                    View on Google Maps
+                </button>
+            {% else %}
+                <p>Location data not available</p>
+            {% endif %}
+        </div>
+
+
+        <br>
+        <div class="mt-4 space-y-3">
+            <a href="/write_review/{{ bathroomID }}">Write a Review</a>
+            {% for review in bathroomReviews %}
+                <div id="stars{{ review.rating }}" class="p-4 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+                    {% for i in range(1, 6) %}
+                        {% if i <= review.rating %}
+                            <i class="fa-solid fa-star"></i>
+                        {% else %}
+                            <i class="fa-regular fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                    {{ (review.date|string).split(" ")[0] }} {{ (review.date|string).split(" ")[1].split(".")[0] }}
+                    <br> {{ review.comment }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Edit Bathroom Modal -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-80 dark:bg-neutral-800">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Edit Bathroom</h2>
+
+            <form id="editForm" class="mt-4 space-y-2">
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Label:</span>
+                    <input type="text" id="editLabel" class="w-full p-2 border rounded bg-gray-100 text-gray-900 dark:bg-neutral-700 dark:text-white">
+                </label>
+
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Floor:</span>
+                    <input type="number" id="editFloor" class="w-full p-2 border rounded bg-gray-100 text-gray-900 dark:bg-neutral-700 dark:text-white">
+                </label>
+
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Orientation:</span>
+                    <select id="editOrientation" class="w-full p-2 border rounded bg-gray-100 text-gray-900 dark:bg-neutral-700 dark:text-white">
+                        <option value="Men's">Men's</option>
+                        <option value="Women's">Women's</option>
+                        <option value="All">All</option>
+                    </select>
+                </label>
+
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Type:</span>
+                    <select id="editType" class="w-full p-2 border rounded bg-gray-100 text-gray-900 dark:bg-neutral-700 dark:text-white">
+                        <option value="Communal">Communal</option>
+                        <option value="Private">Private</option>
+                    </select>
+                </label>
+
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Sinks:</span>
+                    <input type="number" id="editSinks" class="w-full p-2 border rounded bg-gray-100 text-gray-900 dark:bg-neutral-700 dark:text-white">
+                </label>
+
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Toilets:</span>
+                    <input type="number" id="editToilets" class="w-full p-2 border rounded bg-gray-100 text-gray-900 dark:bg-neutral-700 dark:text-white">
+                </label>
+
+                <label class="block">
+                    <span class="text-gray-700 dark:text-gray-300">Image URL:</span>
+                    <input type="text" id="editImgUrl" class="w-full p-2 border rounded bg-gray-100 text-gray-900 dark:bg-neutral-700 dark:text-white">
+                </label>
+            </form>
+
+            <!-- Buttons -->
+            <div class="mt-4 flex justify-end space-x-3">
+                <button id="closeModal" class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded">
+                    Cancel
+                </button>
+                <button id="saveChanges" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const editButton = document.getElementById("editButton");
+            const editModal = document.getElementById("editModal");
+            const closeModal = document.getElementById("closeModal");
+            const saveChanges = document.getElementById("saveChanges");
+
+            function populateForm() {
+                document.getElementById("editLabel").value = "{{ bathroom.label }}";
+                document.getElementById("editFloor").value = "{{ bathroom.floor }}";
+                document.getElementById("editOrientation").value = "{{ bathroom.orientation }}";
+                document.getElementById("editType").value = "{{ bathroom.type }}";
+                document.getElementById("editSinks").value = "{{ bathroom.sinks }}";
+                document.getElementById("editToilets").value = "{{ bathroom.toilets }}";
+                document.getElementById("editImgUrl").value = "{{ bathroom.img_url }}";
+            }
+
+            editButton?.addEventListener("click", () => {
+                populateForm();
+                editModal.classList.remove("hidden");
+            });
+
+            closeModal.addEventListener("click", () => {
+                editModal.classList.add("hidden");
+            });
+
+            saveChanges.addEventListener("click", async () => {
+                const updatedBathroom = {
+                    label: document.getElementById("editLabel").value,
+                    floor: document.getElementById("editFloor").value,
+                    orientation: document.getElementById("editOrientation").value,
+                    type: document.getElementById("editType").value,
+                    sinks: document.getElementById("editSinks").value,
+                    toilets: document.getElementById("editToilets").value,
+                    img_url: document.getElementById("editImgUrl").value
+                };
+
+                await fetch("{{ url_for('update_bathroom', bathroomID=bathroom['_id']|string) }}", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedBathroom)
+                });
+
+                location.reload();
+            });
+        });
+    </script>
     
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const viewOnMapButton = document.getElementById("viewOnMap");
+
+            if (viewOnMapButton) {
+                viewOnMapButton.addEventListener("click", () => {
+                    const lat = "{{ latitude }}";  // Use latitude passed from the backend
+                    const lng = "{{ longitude }}";  // Use longitude passed from the backend
+                    
+                    // Create the Google Maps URL with the lat/lng
+                    const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+                    
+                    // Open the URL in a new window
+                    window.open(googleMapsUrl, "_blank");
+                });
+            }
+        });
+    </script>
 </body>
 </html>
