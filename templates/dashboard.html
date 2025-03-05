@@ -6,7 +6,7 @@
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-white">
+<body class="bg-white text-gray-900">
     {% include 'navbar.html' %}
     
     <div class="container mx-auto p-6">
@@ -14,31 +14,31 @@
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
             <!-- Buildings Count -->
-            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold">Total Buildings</h2>
                 <p class="text-3xl font-bold">{{ total_buildings }}</p>
             </div>
 
             <!-- Bathrooms Count -->
-            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold">Total Bathrooms</h2>
                 <p class="text-3xl font-bold">{{ total_bathrooms }}</p>
             </div>
 
             <!-- Normal Users Count -->
-            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold">Normal Users</h2>
                 <p class="text-3xl font-bold">{{ normal_users }}</p>
             </div>
 
             <!-- Admin Users Count -->
-            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold">Admin Users</h2>
                 <p class="text-3xl font-bold">{{ admin_users }}</p>
             </div>
 
             <!-- Reviews Count -->
-            <div class="p-6 bg-white rounded-lg shadow-md dark:bg-neutral-800">
+            <div class="p-6 bg-gray-100 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold">Total Reviews</h2>
                 <p class="text-3xl font-bold">{{ total_reviews }}</p>
             </div>

@@ -24,6 +24,9 @@ To help university students filter, search for, and find campus bathrooms.
 ## Steps necessary to run the software
 
 1. Ensure you have Python installed.
+
+### Cloning
+
 2. Click the green button above labeled `Code`.
 3. Ensure you are on the `Local` tab.
 4. This next step is up to you, but I prefer to use HTTPS and the instructions will follow that.
@@ -31,14 +34,23 @@ To help university students filter, search for, and find campus bathrooms.
 6. Open a Terminal window on your machine and navigate to the directory where you would like to house the project's codebase.
 7. Type `clone https://github.com/software-students-spring2025/2-web-app-making-this-work.git`.
 8. Navigate into the newly cloned folder using CD.
-9. Place your credentials in the .env file.
-10. Using Python, create a virtual environment with `python -m venv environment_name`
-11. Enter that environment with the commant `source environment_name/bin/activate`
-12. Once inside the environment, run `pip install flask flask-login pymongo werkzeug python-dotenv` to install all non-default dependencies.
-13. Now, run app.py.
-4. Browse to the web app at the link 127.0.0.1:5000.
 
-*Note!* Your IP Address MUST BE WHITELISTED on the MongoDB in order to access it.
+### Installing MongoDB locally
+
+9. No .env file is needed. We will be hosting the DB locally. Ensure you have MongoDB installed locally. The instructions for that can be found [here](https://www.mongodb.com/docs/manual/installation/#mongodb-installation-tutorials). Select the manual for your appropriate operating system.
+10. Once it is installed, run `brew services start mongodb-community@8.0`, replacing 8.0 with whichever version you installed. By default, as of 2025-03-05, it will be 8.0 and you do not have to change any part of the command.
+
+### Setting up the Python environment & DB-state
+
+11. Using Python, create a virtual environment with `python -m venv environment_name`.
+12. Enter that environment with the commant `source environment_name/bin/activate`.
+13. Once inside the environment, run `pip install flask flask-login pymongo werkzeug python-dotenv` to install all non-default dependencies.
+14. Run `python CreateDB.py`. This will create & initialize the database locally. If you run into issues, it may be because your machine is already hosting something on port 27017. In that case, end whatever process is doing that.
+
+### Running the web-app
+
+15. Now, run `flask run`.
+16. Browse to the web app at the link https://127.0.0.1:5000.
    
 ## Task boards
 

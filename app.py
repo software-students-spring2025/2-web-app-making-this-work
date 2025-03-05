@@ -14,8 +14,9 @@ app = Flask(__name__)
 app.secret_key = os.urandom(16)  # Generate random key for session management
 
 # MongoDB connection
-MONGO_URI = os.getenv("MONGO_URI")
-client = MongoClient(MONGO_URI)
+# MONGO_URI = os.getenv("MONGO_URI")
+# client = MongoClient(MONGO_URI)
+client = MongoClient("mongodb://localhost:27017/")
 db = client.get_database("Cluster0")
 
 # Collections
@@ -182,13 +183,17 @@ def bathroom(bathroomID):
     latitude = location.get("lat")
     longitude = location.get("lng")
     
-    i=0
-    revSum=0
+    i = 0
+    revSum = 0
     for review in reviews:
-        i+=1
-        revSum+=review["rating"]
-    revSum=revSum/i
-    overallRating=""
+        i += 1
+        revSum += review["rating"]
+    # Prevent division by zero
+    if i > 0:
+        revSum = revSum / i
+    else:
+        revSum = 0  # Or any default value you prefer
+    overallRating = ""
     
     i=0
     while (i<revSum):
