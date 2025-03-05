@@ -55,6 +55,17 @@ To help university students filter, search for, and find campus bathrooms.
 
 15. Now, run `flask run`.
 16. Browse to the web app at the link http://127.0.0.1:5000.
+17. Open Developer Tools in your browser and activate mobile viewing.
+
+```
+The DB is initialized with two default accounts. Their credentials are as follows.  
+Admin Username:         `admin@nyu.edu`  
+Admin Password:         `password`  
+Generic User Username:  `user@nyu.edu`  
+Generic User Password:  `password`  
+
+You can also create your own account and select your privelages. The email you use must end in `@nyu.edu`.
+```
 
 ### Shutting it down
 
@@ -69,3 +80,15 @@ To help university students filter, search for, and find campus bathrooms.
 [Sprint 1 Project Link](https://github.com/orgs/software-students-spring2025/projects/140/views/1)
 
 [Sprint 2 Project Link](https://github.com/orgs/software-students-spring2025/projects/141/views/1)
+
+## Screens
+
+### 6 different screens.
+
+- 2 that must display data retrieved from the database: [admin dashboard page](http://127.0.0.1:5000/dashboard), [map page](http://127.0.0.1:5000/).
+- 1 that must allow the user to add data to the database: [signup page](http://127.0.0.1:5000/signup).
+- 1 that must allow the user to edit data in the database: [bathroom page](http://127.0.0.1:5000/bathroom/67c86d2c86ba06887925a9d8) (when logged in as Admin).
+- 1 that must allow the user to delete data from the database: [user profile page](http://127.0.0.1:5000/profile).
+- 1 that must allow the user to search for data in the database: [search page](http://127.0.0.1:5000/search).
+
+Note: some screens have multiple features and therefore overlap in their functionality, but for this documentation here, we are pretending they are single-feature in regard to the CRUD process.
