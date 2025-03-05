@@ -91,7 +91,7 @@ You can also create your own account and select your privelages. The email you u
 - 1 that must allow the user to delete data from the database: [user profile page](http://127.0.0.1:5000/profile).
 - 1 that must allow the user to search for data in the database: [search page](http://127.0.0.1:5000/search).
 
-Note: some screens have multiple features and therefore overlap in their functionality, but for this documentation here, we are pretending they are single-feature in regard to the CRUD process.
+*Note: some screens have multiple features and therefore overlap in their functionality, but for this documentation here, we are pretending they are single-feature in regard to the CRUD process.*
 
 ## Demo Video
 
