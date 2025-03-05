@@ -23,9 +23,19 @@ To help university students filter, search for, and find campus bathrooms.
 
 ## Steps necessary to run the software
 
-1. Install Python 3.13.
-2. In your terminal, run `pip3 install flask pymongo dotenv`. If `pip3` is not found, try `pip`.
-3. Run app.py.
+1. Ensure you have Python installed.
+2. Click the green button above labeled `Code`.
+3. Ensure you are on the `Local` tab.
+4. This next step is up to you, but I prefer to use HTTPS and the instructions will follow that.
+5. Copy the link in the window.
+6. Open a Terminal window on your machine and navigate to the directory where you would like to house the project's codebase.
+7. Type `clone https://github.com/software-students-spring2025/2-web-app-making-this-work.git`.
+8. Navigate into the newly cloned folder using CD.
+9. Place your credentials in the .env file.
+10. Using Python, create a virtual environment with `python -m venv environment_name`
+11. Enter that environment with the commant `source environment_name/bin/activate`
+12. Once inside the environment, run `pip install flask flask-login pymongo werkzeug python-dotenv` to install all non-default dependencies.
+13. Now, run app.py.
 4. Browse to the web app at the link 127.0.0.1:5000.
 *Note!* Your IP MUST BE WHITELISTED on the MongoDB in order to access it.
    
