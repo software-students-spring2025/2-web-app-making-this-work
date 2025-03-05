@@ -23,6 +23,10 @@ To help university students filter, search for, and find campus bathrooms.
 
 ## Steps necessary to run the software
 
+*Note: These instructions follow installation and running on Mac OSX.*
+
+### Making sure Python is installed
+
 1. Ensure you have Python installed. Instructions for that can be found [here](https://www.python.org/downloads/).
 
 ### Cloning
@@ -32,13 +36,13 @@ To help university students filter, search for, and find campus bathrooms.
 4. This next step is up to you, but I prefer to use HTTPS and the instructions will follow that.
 5. Copy the link in the window.
 6. Open a Terminal window on your machine and navigate to the directory where you would like to house the project's codebase.
-7. Type `clone https://github.com/software-students-spring2025/2-web-app-making-this-work.git`.
+7. Type `git clone https://github.com/software-students-spring2025/2-web-app-making-this-work.git`.
 8. Navigate into the newly cloned folder using CD.
 
 ### Installing MongoDB locally
 
-9. No .env file is needed. We will be hosting the DB locally. Ensure you have MongoDB installed locally. The instructions for that can be found [here](https://www.mongodb.com/docs/manual/installation/#mongodb-installation-tutorials). Select the manual for your appropriate operating system.
-10. Once it is installed, run `brew services start mongodb-community@8.0`, replacing 8.0 with whichever version you installed. By default, as of 2025-03-05, it will be 8.0 and you do not have to change any part of the command.
+9. No .env file is needed. We will be hosting the DB locally. Ensure you have MongoDB community version installed locally. Enterprise version will work too, but the commands below are for community. The instructions installing can be found [here](https://www.mongodb.com/docs/manual/installation/#mongodb-installation-tutorials).
+10. Once it is installed, run `brew services start mongodb-community`.
 
 ### Setting up the Python environment & DB-state
 
@@ -50,7 +54,13 @@ To help university students filter, search for, and find campus bathrooms.
 ### Running the web-app
 
 15. Now, run `flask run`.
-16. Browse to the web app at the link https://127.0.0.1:5000.
+16. Browse to the web app at the link http://127.0.0.1:5000.
+
+### Shutting it down
+
+17. To terminate hosting the web-app, in your terminal, click Control and C at the same time.
+18. We are still in the virtual environment, so type the command `deactivate`. This will exit the environment.
+19. Run the comman `brew services stop mongodb-community`, and you're done!
    
 ## Task boards
 
