@@ -37,6 +37,7 @@ To help university students filter, search for, and find campus bathrooms.
 12. Once inside the environment, run `pip install flask flask-login pymongo werkzeug python-dotenv` to install all non-default dependencies.
 13. Now, run app.py.
 4. Browse to the web app at the link 127.0.0.1:5000.
+
 *Note!* Your IP MUST BE WHITELISTED on the MongoDB in order to access it.
    
 ## Task boards
