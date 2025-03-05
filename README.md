@@ -23,7 +23,7 @@ To help university students filter, search for, and find campus bathrooms.
 
 ## Steps necessary to run the software
 
-1. Ensure you have Python installed.
+1. Ensure you have Python installed. Instructions for that can be found [here](https://www.python.org/downloads/).
 
 ### Cloning
 
