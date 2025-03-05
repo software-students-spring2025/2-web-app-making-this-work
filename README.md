@@ -92,3 +92,7 @@ You can also create your own account and select your privelages. The email you u
 - 1 that must allow the user to search for data in the database: [search page](http://127.0.0.1:5000/search).
 
 Note: some screens have multiple features and therefore overlap in their functionality, but for this documentation here, we are pretending they are single-feature in regard to the CRUD process.
+
+## Demo Video
+
+The YouTube link to our Demo Video can be found [here](https://www.youtube.com/watch?v=LhY9B9Im86k).
