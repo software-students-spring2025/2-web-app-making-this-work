@@ -38,7 +38,7 @@ To help university students filter, search for, and find campus bathrooms.
 13. Now, run app.py.
 4. Browse to the web app at the link 127.0.0.1:5000.
 
-*Note!* Your IP MUST BE WHITELISTED on the MongoDB in order to access it.
+*Note!* Your IP Address MUST BE WHITELISTED on the MongoDB in order to access it.
    
 ## Task boards
 
